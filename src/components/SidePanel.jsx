@@ -24,14 +24,14 @@ const SidePanel = () => {
 
   const defineClassName = (section) => {
     let className = "";
-    if (section.name.length < 33) className += "vert-center";
+    className += "vert-center";
     if (section.id === sectionId) className += " active";
     return className;
   };
 
   return (
     <Wrapper>
-      <ul>
+      <ul className='scrollbar'>
         {sections.map((section) => (
           <Link key={section.id} to={`/${section.id}`}>
             <li className={defineClassName(section)}>{section.name}</li>
@@ -48,18 +48,41 @@ const Wrapper = styled.aside`
   position: fixed;
   left: 0;
   top: 0;
-  height: calc(100vh - 5.1rem);
+  height: 100vh;
+  /* height: calc(100vh - 5.1rem); */
   width: max(300px);
   background-color: #2b2d3e;
   color: whitesmoke;
   ul {
+    overflow-y: scroll;
     height: 100%;
     display: flex;
     flex-direction: column;
     /* justify-content: space-between; */
     list-style: none;
     align-items: flex-start;
-    margin-top: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    &.scrollbar::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+
+      border: none;
+      border-radius: 10px;
+    }
+
+    &.scrollbar::-webkit-scrollbar {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+
+      width: 10px;
+      border-radius: 10px;
+    }
+
+    &.scrollbar::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: #75808d;
+    }
     a {
       color: whitesmoke;
       text-decoration: none;

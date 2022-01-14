@@ -35,8 +35,8 @@ const Wrapper = styled.div`
   align-items: center;
   position: fixed;
   padding-bottom: 0.5rem;
-
-  width: 100vw;
+  margin-left: 300px;
+  width: calc(100vw - 300px);
   height: 5.5rem;
   background-color: #2b2d3e;
   color: whitesmoke;
@@ -55,19 +55,5 @@ const Wrapper = styled.div`
     svg {
       font-size: 1.5rem;
     }
-    /* button {
-      padding: 5px 8px;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-      border: none;
-      border-radius: 5px;
-      background-color: whitesmoke;
-      outline: none;
-    } */
   }
 `;
-/*
-totalPrice
-totalQuantity
-button add to cart
-*/
