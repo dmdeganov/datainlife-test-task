@@ -1,10 +1,5 @@
-import {
-  createSlice,
-  //   createSelector,
-  createAsyncThunk,
-} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
 
 const initialState = {
   status: "",

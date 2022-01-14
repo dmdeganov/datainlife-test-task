@@ -2,7 +2,6 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import productsReducer from "../slices/productSlice";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "../sagas/productsSaga";
-import { applyMiddleware, createStore } from "redux";
 import { combineReducers } from "redux";
 const rootReducer = combineReducers({
   goods: productsReducer,
