@@ -12,6 +12,7 @@ const Products = () => {
   const { products, status, sentProducts } = useSelector(
     (state) => state.goods
   );
+
   if (status !== "idle") {
     return (
       <>
@@ -63,10 +64,11 @@ const StyledTable = styled.div`
     }
 
     td.input-amount {
+      width: 20%;
       input {
         height: 30px;
         border: none;
-        width: 5rem;
+        width: 100%;
         text-align: center;
         &.first {
           border-top: 1px solid black;

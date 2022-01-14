@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { formatPrice } from "../helpers/formatPrice";
 import { useSelector, useDispatch } from "react-redux";
-import { sendCart } from "../slices/productSlice";
+import { sendCartInit } from "../slices/productSlice";
 const CartPanel = () => {
   const dispatch = useDispatch();
   const { totalPrice, totalQuantity, cart } = useSelector(
@@ -11,7 +11,7 @@ const CartPanel = () => {
   );
   const sendHandler = () => {
     if (cart.length === 0) return;
-    dispatch(sendCart(cart));
+    dispatch({ type: sendCartInit().type, payload: cart });
   };
   return (
     <Wrapper>

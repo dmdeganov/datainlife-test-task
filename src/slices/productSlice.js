@@ -4,6 +4,7 @@ import {
   createAsyncThunk,
 } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import { useSelector } from "react-redux";
 
 const initialState = {
   status: "",
@@ -30,6 +31,23 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    fetchProductsStart(state) {
+      state.status = "loading";
+    },
+    fetchProductsSuccess(state, action) {
+      action.payload.map((section) => {
+        if (!(section.rid && section.rname)) {
+          section.rid = uuidv4();
+          section.rname = "Без названия";
+        }
+        return section;
+      });
+      state.status = "idle";
+      state.products = action.payload;
+    },
+    fetchProductsError(state) {
+      state.status = "error";
+    },
     addProduct(state, action) {
       const { id, amount, price } = action.payload;
       state.cart.push({ id, amount, price });
@@ -59,63 +77,84 @@ const productsSlice = createSlice({
     backToCatalog(state) {
       state.status = "idle";
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchProducts.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        action.payload.map((section) => {
-          if (!(section.rid && section.rname)) {
-            section.rid = uuidv4();
-            section.rname = "Без названия";
-          }
-          return section;
-        });
-        state.status = "idle";
-        state.products = action.payload;
-      })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = "error";
-      })
-      .addCase(sendCart.pending, (state) => {
-        state.status = "sending";
-      })
-      .addCase(sendCart.fulfilled, (state, action) => {
-        console.log(action.payload);
-
-        state.status = "successfully_sent";
-        state.sentProducts = Object.entries(action.payload).map((arrItem) => {
-          return {
-            id: arrItem[0],
-            amount: arrItem[1],
-          };
-        });
-        state.cart = [];
-        state.totalPrice = 0;
-        state.totalQuantity = 0;
-      })
-      .addCase(sendCart.rejected, (state) => {
-        state.status = "error";
+    sendCartInit(state) {
+      state.status = "sending";
+    },
+    sendCartSuccess(state, action) {
+      state.status = "successfully_sent";
+      state.sentProducts = Object.entries(action.payload).map((arrItem) => {
+        return {
+          id: arrItem[0],
+          amount: arrItem[1],
+        };
       });
+      state.cart = [];
+      state.totalPrice = 0;
+      state.totalQuantity = 0;
+    },
+    sendCartError(state) {
+      state.status = "error";
+    },
   },
-});
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(fetchProductsThunk.pending, (state) => {
+  //       state.status = "loading";
+  //     })
+  //     .addCase(fetchProductsThunk.fulfilled, (state, action) => {
+  //       action.payload.map((section) => {
+  //         if (!(section.rid && section.rname)) {
+  //           section.rid = uuidv4();
+  //           section.rname = "Без названия";
+  //         }
+  //         return section;
+  //       });
+  //       state.status = "idle";
+  //       state.products = action.payload;
+  //     })
+  //     .addCase(fetchProductsThunk.rejected, (state, action) => {
+  //       state.status = "error";
+  //     })
+  //     .addCase(sendCart.pending, (state) => {
+  //       state.status = "sending";
+  //     })
+  //     .addCase(sendCart.fulfilled, (state, action) => {
+  //       console.log(action.payload);
 
-export const fetchProducts = createAsyncThunk("products/sendCart", async () => {
+  //       state.status = "successfully_sent";
+  //       state.sentProducts = Object.entries(action.payload).map((arrItem) => {
+  //         return {
+  //           id: arrItem[0],
+  //           amount: arrItem[1],
+  //         };
+  //       });
+  //       state.cart = [];
+  //       state.totalPrice = 0;
+  //       state.totalQuantity = 0;
+  //     })
+  //     .addCase(sendCart.rejected, (state) => {
+  //       state.status = "error";
+  //     });
+  // },
+  //////
+  //these extrareducers I used with redux thunk middleware before level 4 :)
+});
+export const fetchProducts = async () => {
   try {
     const response = await fetch(
       "https://datainlife.ru/junior_task/get_products.php"
     ).then((res) => res.json());
-    console.log(response);
-
     return response;
   } catch (err) {
     console.log(err);
+    return err.message;
   }
-});
-
-export const sendCart = createAsyncThunk("products/fetch", async (cart) => {
+};
+// export const fetchProductsThunk = createAsyncThunk(
+//   "products/sendCart",
+//   fetchProducts
+// );
+export const sendFormData = async (cart) => {
   let formData = new FormData();
   cart.forEach((product) =>
     formData.append(`product[${product.id}]`, product.amount)
@@ -131,9 +170,21 @@ export const sendCart = createAsyncThunk("products/fetch", async (cart) => {
     return response.data.product;
   } catch (err) {
     console.log(err);
+    return err.message;
   }
-});
+};
+// export const sendFormDataThunk = createAsyncThunk("products/fetch", sendFormData);
 
-export const { addProduct, changeProductAmount, deleteProduct, backToCatalog } =
-  productsSlice.actions;
+export const {
+  addProduct,
+  changeProductAmount,
+  deleteProduct,
+  backToCatalog,
+  fetchProductsStart,
+  fetchProductsSuccess,
+  fetchProductsError,
+  sendCartInit,
+  sendCartSuccess,
+  sendCartError,
+} = productsSlice.actions;
 export default productsSlice.reducer;

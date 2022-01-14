@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 const SidePanel = () => {
   let { sectionId } = useParams();
   if (!sectionId) sectionId = "218";
-  console.log(sectionId);
 
   const sections = useSelector((state) =>
     state.goods.products.map((section) => {
