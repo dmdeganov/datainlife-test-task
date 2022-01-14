@@ -36,7 +36,7 @@ const Product = ({ gid: id, gname: name, gprice: price }) => {
     <tr>
       <td>{id}</td>
       <td>{name}</td>
-      <td>{price}</td>
+      <td>{formatPrice(price)}</td>
       <td className='input-amount'>
         <input
           type='number'

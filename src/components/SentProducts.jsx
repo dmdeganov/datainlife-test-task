@@ -1,14 +1,17 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 import { backToCatalog } from "../slices/productSlice";
 
 const SentProducts = ({ sentProducts }) => {
   const dispatch = useDispatch();
   return (
-    <div>
+    <Wrapper>
       <br />
       {sentProducts.map((product) => (
-        <h3>{`Товар с ID: ${product.id}, Количество: ${product.amount}`}</h3>
+        <h3
+          key={product.id}
+        >{`Товар с ID: ${product.id}, Количество: ${product.amount}`}</h3>
       ))}
       <br />
       <button
@@ -18,8 +21,12 @@ const SentProducts = ({ sentProducts }) => {
       >
         Вернуться в каталог
       </button>
-    </div>
+    </Wrapper>
   );
 };
 
 export default SentProducts;
+
+const Wrapper = styled.div`
+  margin-left: 300px;
+`;

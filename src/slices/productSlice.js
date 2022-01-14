@@ -3,6 +3,8 @@ import {
   //   createSelector,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
+
 const initialState = {
   status: "",
   products: [],
@@ -64,6 +66,13 @@ const productsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
+        action.payload.map((section) => {
+          if (!(section.rid && section.rname)) {
+            section.rid = uuidv4();
+            section.rname = "Без названия";
+          }
+          return section;
+        });
         state.status = "idle";
         state.products = action.payload;
       })
@@ -98,6 +107,7 @@ export const fetchProducts = createAsyncThunk("products/sendCart", async () => {
     const response = await fetch(
       "https://datainlife.ru/junior_task/get_products.php"
     ).then((res) => res.json());
+    console.log(response);
 
     return response;
   } catch (err) {
