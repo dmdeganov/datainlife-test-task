@@ -59,7 +59,7 @@ const Wrapper = styled.aside`
     /* justify-content: space-between; */
     list-style: none;
     align-items: flex-start;
-    margin-top: 4px;
+    margin-top: 1rem;
     a {
       color: whitesmoke;
       text-decoration: none;
